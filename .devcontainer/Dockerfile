@@ -10,20 +10,14 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y sudo default-jre
+    
 # Install oh-my-zsh
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+RUN apt-get update && apt-get install -y zsh && \
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
 # Set zsh as the default shell
 RUN chsh -s $(which zsh)
-
-# # Update and install necessary dependencies
-# RUN apt install default-jre
-
-# # Set the environment variable for JAVA_HOME
-# ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-
-# # Update PATH variable
-# ENV PATH=$JAVA_HOME/bin:$PATH
 
 # Install Python dependencies
 COPY requirements.txt .
