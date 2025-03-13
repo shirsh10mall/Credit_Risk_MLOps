@@ -1,0 +1,49 @@
+
+services:
+  # MLOps Service
+  mlops-service:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    container_name: mlops-service
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+    volumes:
+      - ..:/workspace:cached
+    networks:
+      - dev-network
+
+  # PostgreSQL for Data Source
+  data-source-db-service:
+    image: postgres:latest
+    container_name: data-source-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: data_source_user
+      POSTGRES_PASSWORD: data_source_user_password
+      POSTGRES_DB: data_source_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - ../db-data-source:/var/lib/postgresql/data
+    networks:
+      - dev-network
+
+  # PostgreSQL for MLOps
+  mlops-db-service:
+    image: postgres:latest
+    container_name: mlops-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mlops_user
+      POSTGRES_PASSWORD: mlops_user_password
+      POSTGRES_DB: mlops_db
+    ports:
+      - "5436:5432"
+    volumes:
+      - ../db-mlops:/var/lib/postgresql/data
+    networks:
+      - dev-network
+
+networks:
+  dev-network:
