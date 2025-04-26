@@ -1,7 +1,6 @@
 
 db-data-source/
 db-mlops/
-notebooks/process_push_raw_data/
 path/
 temp/
 .vscode
