@@ -26,6 +26,9 @@ def get_column_summary(df: pyspark.sql.dataframe.DataFrame, column_name: str):
         .limit(5)
     )
 
+    min_value = df.select(F.min(column_name)).collect()[0][0]
+    max_value = df.select(F.max(column_name)).collect()[0][0]
+
     # Print the column summary
     print(f"Summary for column: {column_name}")
     print("=" * 40)
@@ -34,6 +37,8 @@ def get_column_summary(df: pyspark.sql.dataframe.DataFrame, column_name: str):
     print(f"Null Count       : {null_count}")
     print(f"Total Rows       : {total_rows}")
     print(f"Null Percentage  : {null_percentage} %")
+    print(f"Minimum value: {min_value}")
+    print(f"Maximum value: {max_value}")
     print(
         f"Top 5 unique values : {[value[column_name] for value in top_5_values.collect()]}"
     )
