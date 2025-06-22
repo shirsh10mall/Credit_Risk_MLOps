@@ -1,0 +1,25 @@
+repos:
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: isort (python)
+        args: ["--skip=env", "--skip=venv"]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.4
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+  - repo: https://github.com/dosisod/refurb
+    rev: v2.0.0
+    hooks:
+      - id: refurb
+        name: refurb (all files)
+  - repo: local
+    hooks:
+      - id: sort-requirements
+        name: sort-requirements
+        entry: sort-requirements
+        language: system
+        files: requirements.txt
