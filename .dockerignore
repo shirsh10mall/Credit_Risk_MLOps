@@ -1,0 +1,17 @@
+# Ignore specific folder (if you don't want it copied)
+raw_dataset/
+db-data-source/
+db-mlops/
+
+
+# Ignore temporary files and logs
+*.log
+*.tmp
+*.swp
+*.bak
+
+# Ignore build artifacts or compiled files
+dist/
+build/
+*.o
+*.out
