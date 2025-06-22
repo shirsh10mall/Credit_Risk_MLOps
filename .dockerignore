@@ -2,6 +2,7 @@
 raw_dataset/
 db-data-source/
 db-mlops/
+.venv/
 
 
 # Ignore temporary files and logs
