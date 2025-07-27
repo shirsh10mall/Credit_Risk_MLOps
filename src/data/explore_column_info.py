@@ -1,6 +1,6 @@
 import pyspark
 from pyspark.sql import functions as F
-from pyspark.sql.functions import col, countDistinct
+from pyspark.sql.functions import col, countDistinct, when
 
 
 def get_column_summary(df: pyspark.sql.dataframe.DataFrame, column_name: str):
@@ -43,3 +43,17 @@ def get_column_summary(df: pyspark.sql.dataframe.DataFrame, column_name: str):
         f"Top 5 unique values : {[value[column_name] for value in top_5_values.collect()]}"
     )
     print("=" * 40)
+
+
+def count_nulls(df):
+    null_counts = (
+        df.select(
+            [sum(when(col(c).isNull(), 1).otherwise(0)).alias(c) for c in df.columns]
+        )
+        .collect()[0]
+        .asDict()
+    )
+
+    print("Null values count per column:")
+    for col_name, null_count in null_counts.items():
+        print(f" - {col_name}: {null_count}")
