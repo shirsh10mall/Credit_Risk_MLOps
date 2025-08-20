@@ -1,0 +1,2 @@
+-- No-op placeholder, just ensures initdb runs cleanly
+-- All users/databases will be created dynamically by the app

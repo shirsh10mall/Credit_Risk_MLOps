@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_container
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5
+      start_period: 10s
+    env_file: .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres/initdb:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - mlops_net
+
+  mlops_core:
+    build: ./mlops_core
+    container_name: mlops_core_container
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./mlops_core:/app:delegated
+      - raw_data:/data/raw
+      - processed_data:/data/processed
+      - mlflow_artifacts:/mlflow/artifacts
+    ports:
+      - "8000:8000"   # FastAPI
+      - "7860:7860"   # Gradio
+    environment:
+      POSTGRES_HOST: postgres
+    networks:
+      - mlops_net
+    command: ["bash", "/app/start.sh"]
+    
+
+  orchestrator:
+    build: ./orchestrator
+    container_name: orchestrator_container
+    env_file: .env
+    depends_on:
+      - postgres
+      - mlops_core
+    volumes:
+      - ./orchestrator/dags:/opt/airflow/dags:delegated
+      - mlflow_artifacts:/mlflow/artifacts
+    ports:
+      - "8080:8080"  # Airflow Webserver
+      - "5001:5001"  # MLflow Server
+    networks:
+      - mlops_net
+    command: ["bash", "/opt/orchestrator/start_orchestrator.sh"]
+
+
+volumes:
+  pgdata:
+  raw_data:
+  processed_data:
+  mlflow_artifacts:
+
+networks:
+  mlops_net:
+    driver: bridge

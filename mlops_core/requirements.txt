@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+pyspark
+pandas
+numpy
+scikit-learn
+xgboost
+lightgbm
+mlflow
+great_expectations
+shap
+gradio
+psycopg2-binary
+optuna
