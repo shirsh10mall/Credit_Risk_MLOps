@@ -7,6 +7,9 @@ temp/
 .envs
 raw_dataset/
 setup_files/postgresql-42.7.5.jar
+.ruff_cache
+.mypy_cache
+
 
 # Jupyter Notebook
 .ipynb_checkpoints
